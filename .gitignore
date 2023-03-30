@@ -6,6 +6,11 @@
 # Node artifact files
 node_modules/
 dist/
+out/
+outv1/
+wheels/
+wheels2/
+
 
 # Compiled Java class files
 *.class
