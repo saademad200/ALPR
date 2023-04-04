@@ -92,6 +92,10 @@ class InitializeTabs:
 
         validate_button = QPushButton('Validate IP CAM')
         validate_button.setStyleSheet(validate_button_style)
+
+        ipcam_input.setEnabled(False)
+        validate_button.setEnabled(False)
+        browse_btn.setEnabled(False)
         
         # Place items in the bottom media player layout
         horizontalLayout = QtWidgets.QHBoxLayout()

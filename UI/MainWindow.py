@@ -4,7 +4,7 @@ import magic
 import cv2
 import csv
 import numpy as np
-from UI.model import ANPR
+from model.model import ANPR
 from UI.VideoThread import VideoThread
 from UI.utils import convert_cv_qt, play_video, check_duplicate
 import pandas as pd
@@ -41,7 +41,6 @@ class MainWindow(QMainWindow):
         self.stop_processing_btn.clicked.connect(self.stop_video_thread)
         self.browse_btn.clicked.connect(self.open_file)
         self.play_btn.clicked.connect(lambda: play_video(self, self.thread, self.play_btn))
-        #self.toggle_button.clicked.connect(self.toggle_input)
         self.validate_button.clicked.connect(self.validate_ipcam)
 
         self.export_btn.clicked.connect(self.export)
