@@ -1,11 +1,14 @@
 
-from PyQt5.QtWidgets import QStyle, QFileDialog, QMainWindow,  QTabWidget, QPushButton, QLabel, QLineEdit
-from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QStyle,  QTabWidget, QPushButton, QLabel, QLineEdit, QDateEdit, QComboBox
+from PyQt5 import QtWidgets, QtCore, QtGui
 from UI.table import TableWidget
 from UI.utils import media_player, fetch_data
-from PyQt5.QtGui import QFont, QCursor
-from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
-from UI.AnimatedToggle import AnimatedToggle
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import QDate, Qt
+from UI.styles import button_style, search_input_style, label_style, combobox_style, title_style, start_processing_btn_style, stop_processing_btn_style ,\
+    browse_btn_style, play_btn_style, ip_label_style, ipcam_input_style, status_label_style, validate_button_style, export_btn_style, reset_btn_style, \
+        unselect_btn_style
+
 
 
 class InitializeTabs:
@@ -16,11 +19,10 @@ class InitializeTabs:
         
         # Central Widgets
         self.central_widget = QTabWidget()
-        self.table = TableWidget(fetch_data())
-
+        
         self.tab1 = QtWidgets.QWidget(self.central_widget)
         self.tab2 = QtWidgets.QWidget(self.central_widget)
-        self.central_widget.addTab(self.tab1, "ANPR")
+        self.central_widget.addTab(self.tab1, "ALPR")
         self.central_widget.addTab(self.tab2, "VIEW REPORTS")
 
     def initialize_anpr_content(self):
@@ -30,30 +32,29 @@ class InitializeTabs:
         title = QtWidgets.QLabel(self.tab1)
         title.setAlignment(Qt.AlignHCenter)
         title.setText('Ronicom')
-        title.setStyleSheet(f"font: 75 bold 25pt \"Yrsa\";")
+        title.setStyleSheet(title_style)
 
         start_processing_btn = QtWidgets.QPushButton(self.tab1)
+        start_processing_btn.setEnabled(False)
         start_processing_btn.setFixedSize(QtCore.QSize(200, 70))
-        start_processing_btn.setStyleSheet(
-            "background-color: green; font: 75 italic 18pt \"Yrsa\"; padding: 0.75em 0.5em 0.75em 0.5em;")
+        start_processing_btn.setStyleSheet(start_processing_btn_style)
         start_processing_btn.setText("Start Processing")
 
         stop_processing_btn = QtWidgets.QPushButton(self.tab1)
+        stop_processing_btn.setEnabled(False)
         stop_processing_btn.setFixedSize(QtCore.QSize(200, 70))
-        stop_processing_btn.setStyleSheet(
-            "background-color: red; font: 75 italic 18pt \"Yrsa\"; padding: 0.75em 0.5em 0.75em 0.5em;")
+        stop_processing_btn.setStyleSheet(stop_processing_btn_style)
         stop_processing_btn.setText("Stop Processing")
 
         # Media Buttons
         browse_btn = QtWidgets.QPushButton(self.obj)
         browse_btn.setFixedSize(QtCore.QSize(200, 70))
         browse_btn.setText('Browse')
-        browse_btn.setStyleSheet(
-            "font: 75 italic 18pt \"Yrsa\"; background-color: rgb(215, 215, 225); height:28px; ")
+        browse_btn.setStyleSheet(browse_btn_style)
 
         play_btn = QtWidgets.QPushButton(self.obj)
         play_btn.setIcon(self.obj.style().standardIcon(QStyle.SP_MediaPlay))
-        play_btn.setStyleSheet(" background-color: rgb(215, 215, 225); height:30px;")
+        play_btn.setStyleSheet(play_btn_style)
 
         # Media Player
         stream = media_player(self.tab1)
@@ -66,60 +67,36 @@ class InitializeTabs:
 
         # Spacer
         vertical_spacer = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        
-        # Create UI elements
-        ipcam_label = QLabel('Enter IP Camera Address:')
-        ipcam_input = QLineEdit()
-
-        toggle_button = AnimatedToggle()
-        toggle_button.setText("OFF")
-
-        status_label = QLabel('')
-
-        validate_button = QPushButton('Validate IP CAM')
 
         # Set font styles for labels
         font = QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(12)
+                
+        # Create UI elements
+        ipcam_label = QLabel('Enter IP Camera Address:')
+        ipcam_label.setStyleSheet(ip_label_style)
         ipcam_label.setFont(font)
+
+        ipcam_input = QLineEdit()
+        ipcam_input.setStyleSheet(ipcam_input_style)
+
+        browse_mode = QPushButton("Browse Mode")
+        stream_mode = QPushButton("Stream Mode")
+        browse_mode.setStyleSheet(unselect_btn_style)    
+        stream_mode.setStyleSheet(unselect_btn_style)      
+        
+        status_label = QLabel('')
+        status_label.setStyleSheet(status_label_style)
         status_label.setFont(font)
 
-        validate_button.setStyleSheet("""
-                    font-size: 12px;
-                    padding: 8px 16px;
-                    border: 1px solid #2c3e50;
-                    border-radius: 5px;
-                    color: #fff;
-                    background-color: #2c3e50;
-                """)
-
-        # Set Style for IPcam Label
-        ipcam_label.setStyleSheet("""
-                padding: 8px;
-                font-size: 12px;
-           """)
-
-        # Set Style for IPcam Label
-        status_label.setStyleSheet("""
-                padding: 8px;
-                color: green;
-                font-size:10px;
-
-                """)
-
-        # Set styles for QLineEdit
-        ipcam_input.setStyleSheet("""
-                    font-size: 14px;
-                    padding: 8px;
-                    border: 1px solid #ccc;
-                    border-radius: 5px;
-                    background-color: #f2f2f2;
-                """)
-
+        validate_button = QPushButton('Validate IP CAM')
+        validate_button.setStyleSheet(validate_button_style)
+        
         # Place items in the bottom media player layout
         horizontalLayout = QtWidgets.QHBoxLayout()
         horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        horizontalLayout_3 = QtWidgets.QHBoxLayout()
         
         verticalLayout = QtWidgets.QVBoxLayout()
         verticalLayout_2 = QtWidgets.QVBoxLayout()
@@ -129,11 +106,14 @@ class InitializeTabs:
         gridLayout_2 = QtWidgets.QGridLayout()
         gridLayout_3 = QtWidgets.QGridLayout()
 
+        horizontalLayout_3.addWidget(browse_mode)
+        horizontalLayout_3.addWidget(stream_mode)        
+
         horizontalLayout_2.addWidget(play_btn)
         verticalLayout.addWidget(stream)
         verticalLayout.addLayout(horizontalLayout_2)
         verticalLayout_2.addItem(vertical_spacer)
-        verticalLayout_2.addWidget(toggle_button, alignment=Qt.AlignCenter)
+        verticalLayout_2.addLayout(horizontalLayout_3)
         verticalLayout_2.addWidget(ipcam_label, alignment=Qt.AlignCenter)
         verticalLayout_2.addWidget(ipcam_input, alignment=Qt.AlignCenter)
         verticalLayout_2.addWidget(validate_button, alignment=Qt.AlignCenter)
@@ -155,34 +135,54 @@ class InitializeTabs:
 
         gridLayout_4.addLayout(gridLayout_3, 0, 0, 1, 1)
 
-        return start_processing_btn, stop_processing_btn, browse_btn, play_btn, toggle_button, validate_button,\
+        return start_processing_btn, stop_processing_btn, browse_btn, play_btn, browse_mode, stream_mode, validate_button,\
             status_label, ipcam_input, stream
     
     def initialize_report_content(self):
-        
+        # create table 
+        table = TableWidget(fetch_data())
+
         # Create components
-        title_label = QLabel('Filter Search Results', self.obj)
-        title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet('font-size: 24px; margin-bottom: 20px;')
+        title_label = QtWidgets.QLabel('Filter Search Results', self.obj)
+        title_label.setAlignment(QtCore.Qt.AlignCenter)
+        title_label.setStyleSheet(title_style)
 
-        export_btn = QPushButton('Export Table', self.obj)
+        export_btn = QtWidgets.QPushButton('Export Table', self.obj)
         export_btn.setFixedSize(QtCore.QSize(120, 35))
-        export_btn.setStyleSheet(
-            'background-color: green;  color: white; font-weight: bold; padding: 10px; border-radius: 5px;')
+        export_btn.setStyleSheet(export_btn_style)
 
-        reset_btn = QPushButton('Reset Table', self.obj)
-        reset_btn.setStyleSheet(
-            'background-color: red; color: white; font-weight: bold; padding: 10px; border-radius: 5px;')
+        reset_btn = QtWidgets.QPushButton('Reset Table', self.obj)
+        reset_btn.setStyleSheet(reset_btn_style)
         reset_btn.setFixedSize(QtCore.QSize(120, 40))
 
-        search_input = QLineEdit(self.obj)
-        search_input.setPlaceholderText('Enter search term...')
-        search_input.setStyleSheet('font-size: 16px; padding: 6px; border: 2px solid gray; border-radius: 10px; ')
+        license_label = QLabel('License Plate:', self.obj)
+        license_label.setStyleSheet(label_style)
+        license_input = QLineEdit( self.obj)
+        license_input.setPlaceholderText('License Plate')
+        license_input.setStyleSheet(search_input_style)
+                
+        date_label = QLabel('Date Range:', self.obj)
+        date_label.setStyleSheet(label_style)
+        date_from_picker = DatePicker() 
+        date_from_picker.setDate(QDate.currentDate().addDays(-8))       
+        date_to_picker = DatePicker()
+        date_to_picker.setDate(QDate.currentDate().addDays(2))
+        
+        media_label = QLabel('Camera:', self.obj)
+        media_label.setStyleSheet(label_style)
+        media_type_combo = QComboBox()
+        media_type_combo.addItems(["All","Image", "Video", "Live Stream"])
+        media_type_combo.setStyleSheet(combobox_style)
 
-        search_button = QPushButton('Search', self.obj)
-        search_button.setStyleSheet(
-            'font-size: 16px; padding: 8px; border-radius: 10px; color: #fff; background-color: #2ecc71;')
-        search_button.setFixedSize(QtCore.QSize(120, 40))
+        score_label = QLabel('Score:', self.obj)
+        score_label.setStyleSheet(label_style)
+        score_input = QLineEdit()
+        score_input.setPlaceholderText("Score")
+        score_input.setValidator(QtGui.QDoubleValidator(0, 1, 3))
+        score_input.setStyleSheet(search_input_style)
+
+        filter_button = QPushButton("Filter")
+        filter_button.setStyleSheet(button_style)
 
         # Spacer
         horizontal_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -193,22 +193,36 @@ class InitializeTabs:
         horizontalLayout_2 = QtWidgets.QHBoxLayout()
         verticalLayout = QtWidgets.QVBoxLayout()
         
-        horizontalLayout.addWidget(search_input)
-        horizontalLayout.addWidget(search_button)
+        horizontalLayout.setSpacing(5)
+        horizontalLayout.addWidget(license_label)
+        horizontalLayout.addWidget(license_input)
+        horizontalLayout.addWidget(score_label)
+        horizontalLayout.addWidget(score_input)
+        horizontalLayout.addWidget(media_label)
+        horizontalLayout.addWidget(media_type_combo)
+        horizontalLayout.addWidget(date_label)
+        horizontalLayout.addWidget(date_from_picker)
+        horizontalLayout.addWidget(date_to_picker)
+        horizontalLayout.addWidget(filter_button)
         horizontalLayout_2.addWidget(export_btn)
         horizontalLayout_2.addItem(horizontal_spacer)
         horizontalLayout_2.addWidget(reset_btn)
         verticalLayout.addLayout(horizontalLayout_2)
         verticalLayout.addWidget(title_label)
         verticalLayout.addLayout(horizontalLayout)
-        verticalLayout.addWidget(self.table)
+        verticalLayout.addWidget(table)
 
         gridLayout.addLayout(verticalLayout, 0, 0, 1, 1)
         
-        return export_btn, reset_btn, search_input, search_button
+        return export_btn, reset_btn, license_input, score_input, media_type_combo, date_from_picker,date_to_picker, filter_button, table
 
     def get_central_widget(self):
         return self.central_widget
 
-    def get_table(self):
-        return self.table
+class DatePicker(QDateEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setFixedSize(150, 40)
+        self.setCalendarPopup(True)
+        self.setDisplayFormat("yyyy-MM-dd")
+        self.setStyleSheet(search_input_style)

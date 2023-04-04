@@ -36,54 +36,71 @@ def media_player(central_widget):
     return stream
 
 
-def resize_image(img):
-    # Get the image width and
-    try:
-        height, width = img.shape[:2]
-        # Calculate the new dimensions based on a width of 1280 pixels (720p)
-        if width > height:
-            new_width = 1280
-            new_height = int((1280 / width) * height)
-        else:
-            new_width = int((720 / height) * width)
-            new_height = 720
+def resize_image(image):
+    # Get the original dimensions of the image
+    height, width = image.shape[:2]
 
-        # Resize the image while maintaining its aspect ratio
-        resized_img = cv2.resize(img, (new_width, new_height))
+    # Calculate the aspect ratio of the image
+    aspect_ratio = width / height
 
-        # Create a new image with black padding if necessary
-        img = cv2.copyMakeBorder(
-            resized_img,
-            top=int((720 - new_height) / 2),
-            bottom=int((720 - new_height) / 2),
-            left=int((1280 - new_width) / 2),
-            right=int((1280 - new_width) / 2),
-            borderType=cv2.BORDER_CONSTANT,
-            value=(0, 0, 0)
-        )
-    except:
-        new_width, new_height = 1280, 720
-        img = cv2.resize(img, (new_width, new_height))
-    return img, new_height, new_width
+    # Calculate the new dimensions based on the target width
+    target_width = 1280
+    target_height = 720
+    
+    if aspect_ratio >= target_width / target_height:
+        # Calculate the new height based on the target width and the aspect ratio
+        new_height = int(target_width / aspect_ratio)
 
+        # Resize the image using the calculated dimensions
+        resized_image = cv2.resize(image, (target_width, new_height))
 
-def check_duplicate(a, b):
+        # Add black padding to the top and bottom of the image
+        padding_top = int((target_height - new_height) / 2)
+        padding_bottom = target_height - new_height - padding_top
+        resized_image = cv2.copyMakeBorder(resized_image, padding_top, padding_bottom, 0, 0, cv2.BORDER_CONSTANT, value=0)
+
+    else:
+        # Calculate the new width based on the target height and the aspect ratio
+        new_width = int(target_height * aspect_ratio)
+
+        # Resize the image using the calculated dimensions
+        resized_image = cv2.resize(image, (new_width, target_height))
+
+        # Add black padding to the left and right of the image
+        padding_left = int((target_width - new_width) / 2)
+        padding_right = target_width - new_width - padding_left
+        resized_image = cv2.copyMakeBorder(resized_image, 0, 0, padding_left, padding_right, cv2.BORDER_CONSTANT, value=0)
+
+    # Return the resized image
+    return resized_image
+
+def check_duplicate(a):
     try:
         with open(DATA_PATH, 'r') as f:
             reader = csv.reader(f)
             for row in reader:
-                if row[0] == a and row[1] == b:
-                    return False
-        return True
+                if row[1] == a:
+                    return True
+        return False
     except Exception as e:
         print(f"Exception {e}")
-        return False
+        return True
 
 
 def convert_cv_qt(cv_img):
 
     """Convert from an opencv image to QPixmap"""
-    cv_img, _, _ = resize_image(cv_img)
+    cv_img = resize_image(cv_img)
+    rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+    h, w, ch = rgb_image.shape
+    bytes_per_line = ch * w
+    convert_to_qt_format = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+    return QPixmap.fromImage(convert_to_qt_format)
+
+def convert_license_plate_image(license_plate):
+    """Convert from an opencv image to QPixmap"""
+    cv_img = cv2.imread(f'license_plates/{license_plate}.jpg')
+    cv_img = cv2.resize(cv_img, (400, 250), interpolation=cv2.INTER_NEAREST)
     rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
     h, w, ch = rgb_image.shape
     bytes_per_line = ch * w

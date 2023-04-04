@@ -1,7 +1,6 @@
 from PyQt5.QtCore import pyqtSignal, QThread
 import cv2
 import numpy as np
-import datetime
 import time
 
 
@@ -44,17 +43,12 @@ class VideoThread(QThread):
                         self.mutex = True
                         ret, image = self.cap.read()
                         if ret:
-                            try:
-                                image, detections = self.ocr.process_image(image)
-                                ct = str(datetime.datetime.now())
-                                row = np.array([self.filename, detections, ct])
-                                self.add_row_signal.emit(row)                            
-                                
-                            except:
-                                pass
-                            self.change_pixmap_signal.emit(image)
-                            time.sleep(self.delay)
-                                
+                            
+                            image, detections = self.ocr.process_image(image)
+                            if len(detections) != 0:
+                                self.add_row_signal.emit(detections)                            
+                            
+                            self.change_pixmap_signal.emit(image)                                
                         self.curr_frame += 1
                         self.mutex = False
         self.cap.release()
