@@ -29,6 +29,7 @@ def fetch_data():
 
     return data
 
+
 def media_player(central_widget):
     stream = QtWidgets.QLabel(central_widget)
     stream.resize(1280, 720)
@@ -57,7 +58,8 @@ def resize_image(image):
         # Add black padding to the top and bottom of the image
         padding_top = int((target_height - new_height) / 2)
         padding_bottom = target_height - new_height - padding_top
-        resized_image = cv2.copyMakeBorder(resized_image, padding_top, padding_bottom, 0, 0, cv2.BORDER_CONSTANT, value=0)
+        resized_image = cv2.copyMakeBorder(resized_image, padding_top, padding_bottom, 0, 0, cv2.BORDER_CONSTANT,
+                                           value=0)
 
     else:
         # Calculate the new width based on the target height and the aspect ratio
@@ -69,10 +71,12 @@ def resize_image(image):
         # Add black padding to the left and right of the image
         padding_left = int((target_width - new_width) / 2)
         padding_right = target_width - new_width - padding_left
-        resized_image = cv2.copyMakeBorder(resized_image, 0, 0, padding_left, padding_right, cv2.BORDER_CONSTANT, value=0)
+        resized_image = cv2.copyMakeBorder(resized_image, 0, 0, padding_left, padding_right, cv2.BORDER_CONSTANT,
+                                           value=0)
 
     # Return the resized image
     return resized_image
+
 
 def check_duplicate(a):
     try:
@@ -96,6 +100,7 @@ def convert_cv_qt(cv_img):
     bytes_per_line = ch * w
     convert_to_qt_format = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
     return QPixmap.fromImage(convert_to_qt_format)
+
 
 def convert_license_plate_image(license_plate):
     """Convert from an opencv image to QPixmap"""

@@ -12,13 +12,15 @@ table_style = """
             }
         """
 
-horizontal_header_style = "QHeaderView::section  { color:white; background-color: #3D87C9; border: none; border-bottom: 1px solid #FFFFFF; text-align: center; }"
+horizontal_header_style = "QHeaderView::section  { color:white; background-color: #3D87C9; border: none; \
+                            border-bottom: 1px solid #FFFFFF; text-align: center; }"
 
 vertical_header_style = "QHeaderView::section:vertical { height: 2500px; }"
 
 button_style = '''
     QPushButton {
-        background-color: blue; color: #fff; font-weight: bold; padding: 10px; border-radius: 3px; width: 100px; font-size: 16px;
+        background-color: blue; color: #fff; font-weight: bold; padding: 10px; 
+        border-radius: 3px; width: 100px; font-size: 16px;
     }
    '''
 search_input_style = '''
@@ -74,7 +76,8 @@ combobox_style = '''
 
 title_style = "font: 75 bold 25pt \"Yrsa\";"
 
-start_processing_btn_style = "background-color: green; font: 75 italic 18pt \"Yrsa\"; padding: 0.75em 0.5em 0.75em 0.5em;"
+start_processing_btn_style = "background-color: green; font: 75 italic 18pt \"Yrsa\"; \
+                              padding: 0.75em 0.5em 0.75em 0.5em;"
 
 stop_processing_btn_style = "background-color: red; font: 75 italic 18pt \"Yrsa\"; padding: 0.75em 0.5em 0.75em 0.5em;"
 
@@ -86,7 +89,7 @@ reset_btn_style = 'background-color: #c0392b; color: #fff; font-weight: bold; pa
 
 export_btn_style = 'background-color: #27ae60; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;'
 
-ipcam_input_style = """
+ip_cam_input_style = """
                     font-size: 14px;
                     padding: 8px;
                     border: 1px solid #ccc;

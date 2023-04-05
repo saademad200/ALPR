@@ -4,15 +4,16 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QStyledItemDelegate, QPushButton
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import  QWidget, QTableWidget, QTableWidgetItem, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QPushButton, QHBoxLayout
 from PyQt5.QtCore import Qt
-from PyQt5 import  QtCore
+from PyQt5 import QtCore
 from UI.styles import table_style, horizontal_header_style, vertical_header_style
 from datetime import datetime
 import csv
 from constants import DATA_PATH
 from UI.utils import convert_license_plate_image
 from PIL import Image
+
 
 class CenterAlignedDelegate(QStyledItemDelegate):
     def initStyleOption(self, option, index):
@@ -25,9 +26,9 @@ class TableWidget(QTableWidget):
         super().__init__()
         self.data = data
         self.filter_dict = None
-        self.initUI()
+        self.init_ui()
         
-    def initUI(self):
+    def init_ui(self):
         self.setRowCount(len(self.data))
         self.setColumnCount(7)
         self.setHorizontalHeaderLabels(["S No.",  "IMAGE", "Time", "LICENSE PLATE", "SCORE", "CAMERA", "DELETE"])
@@ -45,14 +46,12 @@ class TableWidget(QTableWidget):
         font.setBold(True)
         header.setFont(font)
 
-        
         # Set table alignment
         self.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
         self.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
         self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.verticalHeader().setVisible(False)
         
-
         # Set Style
         self.setStyleSheet(table_style)
         self.horizontalHeader().setStyleSheet(horizontal_header_style)
@@ -72,14 +71,14 @@ class TableWidget(QTableWidget):
             file.write('')
         print(f"Contents of data.csv have been deleted.")       
 
-    def display(self, mode= "display", filter_dict=None):  
+    def display(self, mode="display", filter_dict=None):
         self.filter_dict = filter_dict
         with open(DATA_PATH, 'r') as f:
             reader = csv.reader(f)
             self.setRowCount(0)
             data = [row for row in reader][::-1]
 
-        if mode!="display":      
+        if mode != "display":
             if filter_dict is not None:
                 temp = []
                 for row in data:
@@ -107,7 +106,6 @@ class TableWidget(QTableWidget):
                     
                 data = temp            
 
-            
         self.setRowCount(len(data))
         # Add data to the table
         for i, row in enumerate(data):
@@ -158,7 +156,6 @@ class TableWidget(QTableWidget):
         # Display the image
         image.show()
             
-        
     def delete_row(self, row):
         license_number = self.item(row, 3).text()
 

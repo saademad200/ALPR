@@ -1,14 +1,22 @@
-
-from PyQt5.QtWidgets import QStyle,  QTabWidget, QPushButton, QLabel, QLineEdit, QDateEdit, QComboBox
 from PyQt5 import QtWidgets, QtCore, QtGui
-from UI.table import TableWidget
-from UI.utils import media_player, fetch_data
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QDate, Qt
-from UI.styles import button_style, search_input_style, label_style, combobox_style, title_style, start_processing_btn_style, stop_processing_btn_style ,\
-    browse_btn_style, play_btn_style, ip_label_style, ipcam_input_style, status_label_style, validate_button_style, export_btn_style, reset_btn_style, \
-        unselect_btn_style
+from PyQt5.QtWidgets import QStyle,  QTabWidget, QPushButton, QLabel, QLineEdit, QDateEdit, QComboBox
+from UI.table import TableWidget
+from UI.utils import media_player, fetch_data
+from UI.styles import button_style, search_input_style, label_style, combobox_style, title_style, \
+    start_processing_btn_style, stop_processing_btn_style, browse_btn_style, play_btn_style, ip_label_style,\
+    ip_cam_input_style, status_label_style, validate_button_style, export_btn_style, reset_btn_style, \
+    unselect_btn_style
 
+
+class DatePicker(QDateEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setFixedSize(150, 40)
+        self.setCalendarPopup(True)
+        self.setDisplayFormat("yyyy-MM-dd")
+        self.setStyleSheet(search_input_style)
 
 
 class InitializeTabs:
@@ -26,9 +34,11 @@ class InitializeTabs:
         self.central_widget.addTab(self.tab2, "VIEW REPORTS")
 
     def initialize_anpr_content(self):
-        gridLayout_4 = QtWidgets.QGridLayout(self.tab1)
-        
-        # Title
+        # Set font styles for labels
+        font = QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+
         title = QtWidgets.QLabel(self.tab1)
         title.setAlignment(Qt.AlignHCenter)
         title.setText('Ronicom')
@@ -72,20 +82,20 @@ class InitializeTabs:
         font = QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(12)
-                
-        # Create UI elements
-        ipcam_label = QLabel('Enter IP Camera Address:')
-        ipcam_label.setStyleSheet(ip_label_style)
-        ipcam_label.setFont(font)
 
-        ipcam_input = QLineEdit()
-        ipcam_input.setStyleSheet(ipcam_input_style)
+        # Create UI elements
+        ip_cam_label = QLabel('Enter IP Camera Address:')
+        ip_cam_label.setStyleSheet(ip_label_style)
+        ip_cam_label.setFont(font)
+
+        ip_cam_input = QLineEdit()
+        ip_cam_input.setStyleSheet(ip_cam_input_style)
 
         browse_mode = QPushButton("Browse Mode")
         stream_mode = QPushButton("Stream Mode")
-        browse_mode.setStyleSheet(unselect_btn_style)    
-        stream_mode.setStyleSheet(unselect_btn_style)      
-        
+        browse_mode.setStyleSheet(unselect_btn_style)
+        stream_mode.setStyleSheet(unselect_btn_style)
+
         status_label = QLabel('')
         status_label.setStyleSheet(status_label_style)
         status_label.setFont(font)
@@ -93,60 +103,66 @@ class InitializeTabs:
         validate_button = QPushButton('Validate IP CAM')
         validate_button.setStyleSheet(validate_button_style)
 
-        ipcam_input.setEnabled(False)
+        ip_cam_input.setEnabled(False)
         validate_button.setEnabled(False)
         browse_btn.setEnabled(False)
-        
-        # Place items in the bottom media player layout
-        horizontalLayout = QtWidgets.QHBoxLayout()
-        horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        
-        verticalLayout = QtWidgets.QVBoxLayout()
-        verticalLayout_2 = QtWidgets.QVBoxLayout()
-        verticalLayout_3 = QtWidgets.QVBoxLayout()
-        
-        gridLayout = QtWidgets.QGridLayout()
-        gridLayout_2 = QtWidgets.QGridLayout()
-        gridLayout_3 = QtWidgets.QGridLayout()
 
-        horizontalLayout_3.addWidget(browse_mode)
-        horizontalLayout_3.addWidget(stream_mode)        
+        # Mode media layout
+        mode_media_layout = QtWidgets.QHBoxLayout()
+        mode_media_layout.addWidget(browse_mode)
+        mode_media_layout.addWidget(stream_mode)
 
-        horizontalLayout_2.addWidget(play_btn)
-        verticalLayout.addWidget(stream)
-        verticalLayout.addLayout(horizontalLayout_2)
-        verticalLayout_2.addItem(vertical_spacer)
-        verticalLayout_2.addLayout(horizontalLayout_3)
-        verticalLayout_2.addWidget(ipcam_label, alignment=Qt.AlignCenter)
-        verticalLayout_2.addWidget(ipcam_input, alignment=Qt.AlignCenter)
-        verticalLayout_2.addWidget(validate_button, alignment=Qt.AlignCenter)
-        verticalLayout_2.addWidget(status_label, alignment=Qt.AlignCenter)
-        verticalLayout_2.addWidget(browse_btn, alignment=Qt.AlignCenter)
-        verticalLayout_2.addWidget(start_processing_btn, alignment=Qt.AlignCenter)
-        verticalLayout_2.addWidget(stop_processing_btn, alignment=Qt.AlignCenter)
-        verticalLayout_2.addItem(vertical_spacer)
-        verticalLayout_3.addWidget(title)
-        gridLayout.addLayout(verticalLayout_2, 4, 0, 25, 1)
-        gridLayout_2.addLayout(verticalLayout_3, 0, 1, 1, 1)
+        # Bottom media player layout
+        left_media_layout = QtWidgets.QVBoxLayout()
+        left_media_layout.addSpacerItem(
+            QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding))
+        left_media_layout.addLayout(mode_media_layout)
+        left_media_layout.addWidget(ip_cam_label, alignment=Qt.AlignCenter)
+        left_media_layout.addWidget(ip_cam_input, alignment=Qt.AlignCenter)
+        left_media_layout.addWidget(validate_button, alignment=Qt.AlignCenter)
+        left_media_layout.addWidget(status_label, alignment=Qt.AlignCenter)
+        left_media_layout.addWidget(start_processing_btn, alignment=Qt.AlignCenter)
+        left_media_layout.addWidget(stop_processing_btn, alignment=Qt.AlignCenter)
+        left_media_layout.addWidget(browse_btn)
+        left_media_layout.addSpacerItem(
+            QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding))
 
-        horizontalLayout.addLayout(gridLayout)
-        horizontalLayout.addLayout(verticalLayout)
+        # Media Buttons Layout
+        media_buttons_layout = QtWidgets.QHBoxLayout()
+        media_buttons_layout.addWidget(play_btn)
 
-        gridLayout_3.addLayout(horizontalLayout, 2, 0, 1, 1)
-        gridLayout_3.addLayout(gridLayout_2, 0, 0, 1, 1)
-        gridLayout_3.addWidget(line, 1, 0, 1, 1)
+        # Top media player layout
+        top_media_layout = QtWidgets.QVBoxLayout()
+        top_media_layout.addWidget(title)
 
-        gridLayout_4.addLayout(gridLayout_3, 0, 0, 1, 1)
+        # Stream Layout
+        stream_layout = QtWidgets.QVBoxLayout()
+        stream_layout.addWidget(stream)
+        stream_layout.addLayout(media_buttons_layout)
 
-        return start_processing_btn, stop_processing_btn, browse_btn, play_btn, browse_mode, stream_mode, validate_button,\
-            status_label, ipcam_input, stream
+        # Bottom Layout
+        bottom_media_layout = QtWidgets.QHBoxLayout()
+        bottom_media_layout.addLayout(left_media_layout)
+        bottom_media_layout.addLayout(stream_layout)
+
+        # Main layout
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addLayout(top_media_layout)
+        main_layout.addWidget(line)
+        main_layout.addLayout(bottom_media_layout)
+
+        # Tab 1 Layout
+        tab1_layout = QtWidgets.QGridLayout(self.tab1)
+        tab1_layout.addLayout(main_layout, 0, 0, 1, 1)
+
+        return start_processing_btn, stop_processing_btn, browse_btn, play_btn, browse_mode, stream_mode, \
+            validate_button, status_label, ip_cam_input, stream
     
     def initialize_report_content(self):
-        # create table 
+        # create table
         table = TableWidget(fetch_data())
 
-        # Create components
+        # create components
         title_label = QtWidgets.QLabel('Filter Search Results', self.obj)
         title_label.setAlignment(QtCore.Qt.AlignCenter)
         title_label.setStyleSheet(title_style)
@@ -161,21 +177,21 @@ class InitializeTabs:
 
         license_label = QLabel('License Plate:', self.obj)
         license_label.setStyleSheet(label_style)
-        license_input = QLineEdit( self.obj)
+        license_input = QLineEdit(self.obj)
         license_input.setPlaceholderText('License Plate')
         license_input.setStyleSheet(search_input_style)
-                
+
         date_label = QLabel('Date Range:', self.obj)
         date_label.setStyleSheet(label_style)
-        date_from_picker = DatePicker() 
-        date_from_picker.setDate(QDate.currentDate().addDays(-8))       
+        date_from_picker = DatePicker()
+        date_from_picker.setDate(QDate.currentDate().addDays(-8))
         date_to_picker = DatePicker()
         date_to_picker.setDate(QDate.currentDate().addDays(2))
-        
+
         media_label = QLabel('Camera:', self.obj)
         media_label.setStyleSheet(label_style)
         media_type_combo = QComboBox()
-        media_type_combo.addItems(["All","Image", "Video", "Live Stream"])
+        media_type_combo.addItems(["All", "Image", "Video", "Live Stream"])
         media_type_combo.setStyleSheet(combobox_style)
 
         score_label = QLabel('Score:', self.obj)
@@ -188,45 +204,36 @@ class InitializeTabs:
         filter_button = QPushButton("Filter")
         filter_button.setStyleSheet(button_style)
 
-        # Spacer
-        horizontal_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        
-        # Layouts
-        gridLayout = QtWidgets.QGridLayout(self.tab2)
-        horizontalLayout = QtWidgets.QHBoxLayout()
-        horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        verticalLayout = QtWidgets.QVBoxLayout()
-        
-        horizontalLayout.setSpacing(5)
-        horizontalLayout.addWidget(license_label)
-        horizontalLayout.addWidget(license_input)
-        horizontalLayout.addWidget(score_label)
-        horizontalLayout.addWidget(score_input)
-        horizontalLayout.addWidget(media_label)
-        horizontalLayout.addWidget(media_type_combo)
-        horizontalLayout.addWidget(date_label)
-        horizontalLayout.addWidget(date_from_picker)
-        horizontalLayout.addWidget(date_to_picker)
-        horizontalLayout.addWidget(filter_button)
-        horizontalLayout_2.addWidget(export_btn)
-        horizontalLayout_2.addItem(horizontal_spacer)
-        horizontalLayout_2.addWidget(reset_btn)
-        verticalLayout.addLayout(horizontalLayout_2)
-        verticalLayout.addWidget(title_label)
-        verticalLayout.addLayout(horizontalLayout)
-        verticalLayout.addWidget(table)
+        # create layout
+        grid_layout = QtWidgets.QGridLayout(self.tab2)
+        horizontal_layout = QtWidgets.QHBoxLayout()
+        horizontal_layout_2 = QtWidgets.QHBoxLayout()
+        vertical_layout = QtWidgets.QVBoxLayout()
 
-        gridLayout.addLayout(verticalLayout, 0, 0, 1, 1)
-        
-        return export_btn, reset_btn, license_input, score_input, media_type_combo, date_from_picker,date_to_picker, filter_button, table
+        horizontal_layout.setSpacing(5)
+        horizontal_layout.addWidget(license_label)
+        horizontal_layout.addWidget(license_input)
+        horizontal_layout.addWidget(score_label)
+        horizontal_layout.addWidget(score_input)
+        horizontal_layout.addWidget(media_label)
+        horizontal_layout.addWidget(media_type_combo)
+        horizontal_layout.addWidget(date_label)
+        horizontal_layout.addWidget(date_from_picker)
+        horizontal_layout.addWidget(date_to_picker)
+        horizontal_layout.addWidget(filter_button)
+        horizontal_layout_2.addWidget(export_btn)
+        horizontal_layout_2.addItem(
+            QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
+        horizontal_layout_2.addWidget(reset_btn)
+        vertical_layout.addLayout(horizontal_layout_2)
+        vertical_layout.addWidget(title_label)
+        vertical_layout.addLayout(horizontal_layout)
+        vertical_layout.addWidget(table)
+
+        grid_layout.addLayout(vertical_layout, 0, 0, 1, 1)
+
+        return export_btn, reset_btn, license_input, score_input, media_type_combo, date_from_picker, date_to_picker, \
+            filter_button, table
 
     def get_central_widget(self):
         return self.central_widget
-
-class DatePicker(QDateEdit):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
-        self.setFixedSize(150, 40)
-        self.setCalendarPopup(True)
-        self.setDisplayFormat("yyyy-MM-dd")
-        self.setStyleSheet(search_input_style)
