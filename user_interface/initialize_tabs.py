@@ -205,16 +205,16 @@ class InitializeTabs:
         tab1_layout.addLayout(main_layout, 0, 0, 1, 1)
 
         alpr_widgets = {
-            'start_processing_btn', start_processing_btn,
-            'stop_processing_btn', stop_processing_btn,
-            'browse_btn', browse_btn,
-            'play_btn', play_btn,
-            'browse_mode', browse_mode,
-            'stream_mode', stream_mode,
-            'validate_button', validate_button,
-            'status_label', status_label,
-            'ip_cam_input', ip_cam_input,
-            'stream', stream
+            'start_processing_btn': start_processing_btn,
+            'stop_processing_btn': stop_processing_btn,
+            'browse_btn': browse_btn,
+            'play_btn': play_btn,
+            'browse_mode': browse_mode,
+            'stream_mode': stream_mode,
+            'validate_button': validate_button,
+            'status_label': status_label,
+            'ip_cam_input': ip_cam_input,
+            'stream': stream
         }
 
         return alpr_widgets
@@ -300,14 +300,14 @@ class InitializeTabs:
         tab2_layout.addLayout(main_layout, 0, 0, 1, 1)
 
         report_widgets = {
-            'export_table_button', export_table_button,
-            'reset_table_button', reset_table_button,
-            'license_input', license_input,
-            'score_input', score_input,
-            'media_type_combo_box', media_type_combo_box,
-            'date_from_picker', date_from_picker,
-            'date_to_picker', date_to_picker,
-            'filter_button', filter_button
+            'export_btn': export_table_button,
+            'reset_btn': reset_table_button,
+            'license_input': license_input,
+            'score_input': score_input,
+            'media_type_combo_box': media_type_combo_box,
+            'date_from_picker': date_from_picker,
+            'date_to_picker': date_to_picker,
+            'filter_button': filter_button
         }
 
         return report_widgets, report_table

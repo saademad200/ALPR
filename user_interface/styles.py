@@ -209,8 +209,8 @@ PLAY_BTN_STYLE = """
 
 RESET_BTN_STYLE = """
     QPushButton {
-        background-color: #c0392b;
-        color: red;
+        background-color: red;
+        color: white;
         font-weight: bold;
         padding: 10px;
         border-radius: 5px;
