@@ -32,7 +32,7 @@ class ALPR:
         """
         self.paddleocr = PaddleOCR(lang="en", det_db_score_mode="slow")
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH)
+        self.model = torch.hub.load('yolov5', 'custom', path=MODEL_PATH, source='local')
         self.model.to(self.device)
 
     def process_image(self, image):
